@@ -1,0 +1,36 @@
+name: Build and Test Workflow
+
+on:
+  push:
+    branches:
+      - devtask/*
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description:  Provide the branch/tag to build and test
+        required: false
+
+jobs:
+
+  build_test:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release_version != '' }}
+
+    steps:
+    
+      - name: Check out code
+        uses: actions/checkout@v4.1.7
+        with:
+          ref: ${{  github.event.inputs.release_version }}
+
+      - name: Set up Gradle
+        uses: spring-io/spring-gradle-build-action@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build with Gradle
+        run: ./gradlew clean build -PskipCheckExpectedBranchVersion --continue --scan
+
+      - name: Run tests
+        run: ./gradlew :spring-security-crypto:test
