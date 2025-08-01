@@ -611,6 +611,16 @@ public class BCrypt {
 		int rounds, off;
 		StringBuilder rs = new StringBuilder();
 
+		if (passwordb.length > 72) {
+			if (!for_check) {
+				throw new IllegalArgumentException(
+						"Password too long: New passwords must not exceed 72 characters, as only the first 72 characters are securely hashed. Please choose a shorter password.");
+			}
+			else {
+				throw new IllegalArgumentException(
+						"Password rejected: This password exceeds 72 characters. While it may be correct, we cannot verify it securely due to limitations in the previous hashing method. Please reset your password to ensure continued account security.");
+			}
+		}
 		if (salt == null) {
 			throw new IllegalArgumentException("salt cannot be null");
 		}
