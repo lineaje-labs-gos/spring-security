@@ -182,7 +182,7 @@ jobs:
       - name: Set CVE property in Artifactory for Gradle Artifacts
         if: steps.detect.outputs.build_system == 'gradle'
         run: |
-          gav_ids=$(./gradlew listPublications --init-script gradle/artifactory-publish.gradle | tr '\n' ' ')
+          gav_ids=$(./gradlew -q listPublications --init-script gradle/artifactory-publish.gradle | tr '\n' ' ')
           for gav_id in "${gav_ids}"
           do
             GROUP_PATH=$(echo ${gav_id} | awk -F ':' '{print $1}' | tr '.' '/')
