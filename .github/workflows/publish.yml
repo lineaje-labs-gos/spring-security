@@ -79,7 +79,7 @@ jobs:
           ARTIFACTORY_PASSWORD: ${{ secrets.JFROG_PASSWORD }}
           ARTIFACTORY_URL: https://${{ secrets.JFROG_HOST_NAME }}/artifactory
           ARTIFACTORY_REPO: ${{ secrets.MAVEN_STAGING_ARTIFACTORY }}
-        run: ./gradlew clean build --init-script gradle/artifactory-init.gradle --no-daemon -PskipCheckExpectedBranchVersion --continue
+        run: ./gradlew clean build --init-script gradle/artifactory-init.gradle --no-daemon -PskipCheckExpectedBranchVersion --continue -x test
 
       - name: Run Gradle tests
         if: steps.detect.outputs.build_system == 'gradle'
@@ -153,11 +153,12 @@ jobs:
       - name: Deploy Gradle Artifacts to JFrog
         if: steps.detect.outputs.build_system == 'gradle'
         env:
-          JFROG_USERNAME: ${{ secrets.JFROG_USERNAME }}
-          JFROG_PASSWORD: ${{ secrets.JFROG_PASSWORD }}
-          JFROG_URL: https://${{ secrets.JFROG_HOST_NAME }}/artifactory/${{ secrets.MAVEN_STAGING_ARTIFACTORY }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           REPO_URL: https://github.com/${{ github.repository }}
+          ARTIFACTORY_USER: ${{ secrets.JFROG_USERNAME }}
+          ARTIFACTORY_PASSWORD: ${{ secrets.JFROG_PASSWORD }}
+          ARTIFACTORY_URL: https://${{ secrets.JFROG_HOST_NAME }}/artifactory
+          ARTIFACTORY_REPO: ${{ secrets.MAVEN_STAGING_ARTIFACTORY }}
         working-directory: ${{ github.workspace }}
         run: |
           ./gradlew publish --init-script gradle/artifactory-publish.gradle
