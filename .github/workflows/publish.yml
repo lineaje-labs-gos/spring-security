@@ -185,6 +185,7 @@ jobs:
           gav_ids=$(./gradlew -q listPublications --init-script gradle/artifactory-publish.gradle | tr '\n' ' ')
           for gav_id in "${gav_ids}"
           do
+            echo "${gav_id}"
             GROUP_PATH=$(echo ${gav_id} | awk -F ':' '{print $1}' | tr '.' '/')
             ARTIFACT_ID=$(echo ${gav_id} | awk -F ':' '{print $2}')
             VERSION=$(echo ${gav_id} | awk -F ':' '{print $3}')
