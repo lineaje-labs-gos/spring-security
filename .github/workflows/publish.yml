@@ -171,7 +171,7 @@ jobs:
         run: |
           mvn -q exec:exec -Dexec.executable=echo -Dexec.args='${project.groupId}:${project.artifactId}:${project.version}' | tee gav_ids.txt
           gav_ids=$(cat gav_ids.txt | tr '\n' ' ')
-          for gav_id in "${gav_ids}"
+          for gav_id in ${gav_ids}
           do
             GROUP_PATH=$(echo ${gav_id} | awk -F ':' '{print $1}' | tr '.' '/')
             ARTIFACT_ID=$(echo ${gav_id} | awk -F ':' '{print $2}')
@@ -183,7 +183,7 @@ jobs:
         if: steps.detect.outputs.build_system == 'gradle'
         run: |
           gav_ids=$(./gradlew -q listPublications --init-script gradle/artifactory-publish.gradle | tr '\n' ' ')
-          for gav_id in "${gav_ids}"
+          for gav_id in ${gav_ids}
           do
             echo "${gav_id}"
             GROUP_PATH=$(echo ${gav_id} | awk -F ':' '{print $1}' | tr '.' '/')
